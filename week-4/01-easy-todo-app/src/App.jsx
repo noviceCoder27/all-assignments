@@ -1,23 +1,22 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
+import axios from "axios"
+
 
 function App() {
   const [todos, setTodos] = useState([]);
   const titleRef = useRef();
   const descriptionRef = useRef();
+
+  
+  
   async function postTodo() {
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
     const input = {title,description}
-    const response = await fetch('http://localhost:3000/todos',{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(input)
-    });
-    const data = await response.json();
+    const response = await axios.post('http://localhost:3000/todos',input);
+    const data = await response.data;
     setTodos(prevTodos => [...prevTodos,data]);
   }
 
@@ -45,10 +44,8 @@ function Todo(props) {
     useEffect(() => {
       async function fetchodos() {
         try {
-          const response = await fetch('http://localhost:3000/todos',{
-            method: "GET"
-          });
-          const data = await response.json();
+          const response = await axios.get('http://localhost:3000/todos');
+          const data = await response.data;
           props.setTodos(data);
         } catch(err) {
           console.log("Error fetching todo");
@@ -61,9 +58,7 @@ function Todo(props) {
       const todo = e.target.parentElement;
       const id = todo.id
       try {
-        await fetch('http://localhost:3000/todos/' + id,{
-          method: "DELETE"
-        });
+        await axios.delete('http://localhost:3000/todos/' + id);
         const oldTodos = props.todos;
         const deletedTodo = oldTodos.find(todo => todo.id === Number(id));
         const index = oldTodos.indexOf(deletedTodo);
