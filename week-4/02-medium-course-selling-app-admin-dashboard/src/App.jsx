@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import Login from './components/Login';
 import Landing from "./components/Landing";
 import CreateCourse from './components/CreateCourse';
@@ -12,6 +13,7 @@ import { ProtectedRoutes } from './components/ProtectedRoutes';
 // based on the route.
 // You can also try going to /random and see what happens (a route that doesnt exist)
 function App() {
+    const [courses, setCourses] = useState([]);
     return (
         <Router>
             <Routes>
@@ -25,12 +27,12 @@ function App() {
                 } />
                  <Route path = "/courses" element = {
                     <ProtectedRoutes>
-                        <ShowCourses />
+                        <ShowCourses courses = {courses} setCourses = {setCourses}/>
                     </ProtectedRoutes>
                 } />
                  <Route path = "/courses/:id" element = {
                     <ProtectedRoutes >
-                        <CourseContent />
+                        <CourseContent courses = {courses} setCourses={setCourses}/>
                     </ProtectedRoutes>
                 } />
             </Routes>
