@@ -3,8 +3,11 @@ import { useParams } from "react-router-dom"
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { Flex } from "@mantine/core";
+import { useRecoilState } from "recoil";
+import CoursesState from "../context/CoursesAtom";
 
-export const CourseContent = ({courses,setCourses}) => {
+export const CourseContent = () => {
+  const [courses,setCourses] = useRecoilState(CoursesState);
   useEffect(() => {
     async function getCourses() {
         try {
@@ -35,6 +38,8 @@ export const CourseContent = ({courses,setCourses}) => {
             return {...state,price: action.payload};
         case "DESCRIPTION":
             return {...state,description: action.payload};
+        case "IMAGE_LINK":
+            return {...state,imageLink: action.payload};
         case "SET_TO_INITIAL":
           return {title: "",description: "", price: 0, imageLink: "",};
     }
@@ -46,23 +51,28 @@ export const CourseContent = ({courses,setCourses}) => {
 });
 
 function updateCoursesArr(course,prevCourses) {
+  const  updatedCourseArr = [];
   for(let i = 0; i < prevCourses.length;i++) {
     if(prevCourses[i].id === Number(courseId)) {
-      prevCourses[i] = {...course,id: prevCourses[i].id,imageLink: prevCourses[i].imageLink}
+      const updatedCourse = {...course,id: prevCourses[i].id};
+      updatedCourseArr.push(updatedCourse);
+    } else {
+      updatedCourseArr.push(prevCourses[i]);
     }
   }
-  return prevCourses;
+  return updatedCourseArr;
 }
 
+
   async function updateCourse() {
-    const course = {title: state.title, description: state.description,price:state.price,imageLink:state.imageLink};
+    const course = {title: state.title, description: state.description,price:Number(state.price),imageLink:state.imageLink};
     try {
       await axios.put('http://localhost:3000/admin/courses/' + courseId, course ,{
           headers: {
               Authorization: "Bearer " + JSON.parse(localStorage.getItem("token"))
           }
       });
-      setCourses(prevCourses => updateCoursesArr(course,prevCourses))
+      setCourses(prevCourses => updateCoursesArr(course,prevCourses));
       setElementType({span:true,button: 'send'});
       dispath({type: "SET_TO_INITIAL"});
   } catch(err) {
@@ -103,6 +113,12 @@ function updateCoursesArr(course,prevCourses) {
         <>
           <span>Price:</span>
           <input type = "number" style = {{padding: "0.5rem",width: "300px", marginBottom: "0.5rem"}} value = {state.price} onChange = {(e) => dispath({type: "PRICE", payload: e.target.value})}/>
+        </>
+       }
+       {!elementType.span && 
+        <>
+          <span>Image Link:</span>
+          <input type = "text" style = {{padding: "0.5rem",width: "300px", marginBottom: "0.5rem"}} value = {state.imageLink} onChange = {(e) => dispath({type: "IMAGE_LINK", payload: e.target.value})}/>
         </>
        }
         <button style =  {{width: "100px", padding: "0.8rem 1rem", fontSize: "1.2rem", backgroundColor: "#f86b43", border: "none", borderRadius: "10px", color: "white", cursor: "pointer"}} onClick={handleClick}>{elementType.button === 'send' ? "Edit" : "Send" }</button>

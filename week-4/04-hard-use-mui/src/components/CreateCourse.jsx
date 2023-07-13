@@ -7,7 +7,7 @@ function CreateCourse() {
         const course = {
             title: state.title,
             description: state.description,
-            price: state.price,
+            price: Number(state.price),
             imageLink: state.imageLink,
             published:true
         }
@@ -68,17 +68,3 @@ function CreateCourse() {
     )
 }
 export default CreateCourse;
-
-{/* <div>
-        <h1>Create Course</h1>
-        <div>Title: </div>        <input type={"text"} onChange={e => dispath({type: "TITLE", payload: e.target.value})} />
-        <div>Description: </div>
-        <input type={"text"} onChange={e => dispath({type: "DESCRIPTION", payload: e.target.value})} />
-        <div>Price: </div>
-        <input type={"number"} onChange={e => dispath({type: "PRICE", payload: e.target.value})} />
-        <div>Image Link: </div>
-        <input type={"text"} onChange={e => dispath({type: "IMAGE_LINK", payload: e.target.value})} />
-        <br />
-        <br />
-        <button onClick={createCourse}>Create Course</button>
-    </div> */}

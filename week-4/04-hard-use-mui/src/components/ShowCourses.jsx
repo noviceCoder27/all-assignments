@@ -3,10 +3,13 @@ import { useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Text,Box,Flex } from "@mantine/core";
-function ShowCourses({courses,setCourses}) {
+import { useRecoilState } from "recoil";
+import CoursesState from "../context/CoursesAtom";
+function ShowCourses() {
 
     // Add code to fetch courses from the server
     // and set it in the courses state variable.
+    const [courses,setCourses] = useRecoilState(CoursesState);
     useEffect(() => {
         async function getCourses() {
             try {

@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
 import Login from './components/Login';
 import Landing from "./components/Landing";
 import CreateCourse from './components/CreateCourse';
@@ -17,7 +16,6 @@ function App() {
     //     style.innerHTML = 'body { overflow: hidden; }';
     //     document.head.appendChild(style);
     //   }, []);
-    const [courses, setCourses] = useState([]);
     return (
         <div style = {{minHeight: '100vh'}}>
             <Router>
@@ -35,12 +33,12 @@ function App() {
                     } />
                     <Route path = "/courses" element = {
                         <ProtectedRoutes>
-                            <ShowCourses courses = {courses} setCourses = {setCourses}/>
+                            <ShowCourses />
                         </ProtectedRoutes>
                     } />
                     <Route path = "/courses/:id" element = {
                         <ProtectedRoutes >
-                            <CourseContent courses = {courses} setCourses={setCourses}/>
+                            <CourseContent />
                         </ProtectedRoutes>
                     } />
                 </Routes>
