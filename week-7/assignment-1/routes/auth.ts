@@ -1,10 +1,16 @@
+export {};
 const jwt = require("jsonwebtoken");
 const express = require('express');
 const { authenticateJwt, SECRET } = require("../middleware/");
 const { User } = require("../db");
+import { Request,Response } from "express";
 const router = express.Router();
 
-  router.post('/signup', async (req, res) => {
+interface RequestObject extends Request {
+  userId : string
+}
+
+  router.post('/signup', async (req: RequestObject, res:Response) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     if (user) {
@@ -17,7 +23,7 @@ const router = express.Router();
     }
   });
   
-  router.post('/login', async (req, res) => {
+  router.post('/login', async (req: RequestObject, res: Response) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username, password });
     if (user) {
@@ -28,7 +34,7 @@ const router = express.Router();
     }
   });
 
-    router.get('/me', authenticateJwt, async (req, res) => {
+    router.get('/me', authenticateJwt, async (req: RequestObject, res: Response) => {
       const user = await User.findOne({ _id: req.userId });
       if (user) {
         res.json({ username: user.username });
